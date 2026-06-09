@@ -51,7 +51,6 @@ xlabel('Time [s]');ylabel('Acceleration [m/s^2]')
 grid on;
 for i = 1:length(markers.time)
     m_time = markers.time(i);
-    m_text = string(markers.text(i,:)); 
     xline(m_time, '--m', num2str(i),'LabelVerticalAlignment','bottom');   
 end
 legend('Acceleration X', 'Acceleration Y');
@@ -62,7 +61,6 @@ xlabel('Time [s]');ylabel('Acceleration [m/s^2]')
 grid on;
 for i = 1:length(markers.time)
     m_time = markers.time(i);
-    m_text = string(markers.text(i,:)); 
     xline(m_time, '--m', num2str(i), 'LabelVerticalAlignment','bottom');   
 end
 legend('Acceleration Z');

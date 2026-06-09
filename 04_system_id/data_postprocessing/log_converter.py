@@ -4,6 +4,7 @@ import numpy as np
 import scipy.io as sio
 from pymavlink import mavutil
 
+# Parse command line arguments for input and output paths
 parser = argparse.ArgumentParser(description="Multi-Axis Drone Log Converter for MATLAB")
 parser.add_argument("--bin_path", type=str, default="flight.BIN", help="Path to .bin file")
 parser.add_argument("--mat_path", type=str, default="armax_complete.mat", help="Output .mat file")
@@ -11,22 +12,24 @@ args = parser.parse_args()
 
 print(f"Opening log file: {args.bin_path}")
 try:
+    # Establish connection to the log file using pymavlink
     mlog = mavutil.mavlink_connection(args.bin_path)
 except Exception as e:
     print(f"Error: {e}")
     sys.exit(1)
 
-# Main data structure
+# Main data structure - ADDED GYROSCOPE ARRAYS
 data = {
     'ctun': {'time': [], 'thro': [], 'alt': [], 'dalt': []},
     'rcou': {'time': [], 'c1': [], 'c2': [], 'c3': [], 'c4': []},
-    'imu':  {'time': [], 'accX': [], 'accY': [], 'accZ': []},
+    'imu':  {'time': [], 'accX': [], 'accY': [], 'accZ': [], 'gyrX': [], 'gyrY': [], 'gyrZ': []},
     'att':  {'time': [], 'roll': [], 'pitch': [], 'yaw': [], 'des_roll': [], 'des_pitch': [], 'des_yaw': []},
     'markers': {'time': [], 'text': []}
 }
 
 print("Parsing all flight dynamics (CTUN, RCOU, IMU, ATT, MSG)...")
 
+# Read messages sequentially until the end of the file
 while True:
     msg = mlog.recv_match(type=['CTUN', 'RCOU', 'MSG', 'IMU', 'ATT'])
     
@@ -54,6 +57,10 @@ while True:
         data['imu']['accX'].append(msg.AccX)
         data['imu']['accY'].append(msg.AccY)
         data['imu']['accZ'].append(msg.AccZ)
+        # Extracting gyroscope data from the IMU message
+        data['imu']['gyrX'].append(msg.GyrX)
+        data['imu']['gyrY'].append(msg.GyrY)
+        data['imu']['gyrZ'].append(msg.GyrZ)
 
     elif m_type == 'ATT':
         data['att']['time'].append(t_sec)
@@ -66,14 +73,16 @@ while True:
         
     elif m_type == 'MSG':
         msg_text = msg.Message
+        # Check if message contains our custom identification marker
         if "MARKER" in msg_text:
             data['markers']['time'].append(t_sec)
             data['markers']['text'].append(msg_text)
 
-# Conversion and normalization
+# Conversion and normalization to numpy arrays for MATLAB compatibility
 for category in data:
     for key in data[category]:
         data[category][key] = np.array(data[category][key])
 
+# Save the structured dictionary to a .mat file
 sio.savemat(args.mat_path, data)
 print(f"Finished! {args.mat_path} contains flight log in .mat format.")

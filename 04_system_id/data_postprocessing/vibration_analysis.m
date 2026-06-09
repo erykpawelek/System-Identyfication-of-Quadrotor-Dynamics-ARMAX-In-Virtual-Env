@@ -7,7 +7,7 @@ vib_hover_filt_20.markers.time(3) = vib_hover_filt_20.markers.time(3) + 0.94;
 vib_hover_filt_160 = load('vib_hover_filt_160.mat');
 vib_hover_filt_160.markers.time(3) = vib_hover_filt_160.markers.time(3) + 0.94;
 
-figure("Name",'Time plots of Accelerations during hovering with payload dropp (LPF cutoff 20Hz');
+figure("Name",'Time plots of Accelerations during hovering with payload dropp (LPF cutoff 20Hz)');
 subplot(2,1,1);
 plot(vib_hover_filt_20.imu.time, vib_hover_filt_20.imu.accX, '-r', vib_hover_filt_20.imu.time, vib_hover_filt_20.imu.accY, '--b'); 
 xlim([40 130])
@@ -34,9 +34,9 @@ for i = 1:length(vib_hover_filt_20.markers.time)
     xline(m_time, '--m');   
 end
 legend('Acceleration Z');
-sgtitle('Time plots of Accelerations during hovering with payload dropp (LPF cutoff 20Hz');
+sgtitle('Time plots of Accelerations during hovering with payload dropp (LPF cutoff 20Hz)');
 
-figure("Name",'Time plots of Accelerations during hovering with payload dropp (LPF cutoff 160Hz');
+figure("Name",'Time plots of Accelerations during hovering with payload dropp (LPF cutoff 160Hz)');
 subplot(2,1,1);
 plot(vib_hover_filt_160.imu.time, vib_hover_filt_160.imu.accX, '-r', vib_hover_filt_160.imu.time, vib_hover_filt_160.imu.accY, '--b'); 
 xlim([40 130])
@@ -63,7 +63,7 @@ for i = 1:length(vib_hover_filt_160.markers.time)
     xline(m_time, '--m');   
 end
 legend('Acceleration Z');
-sgtitle('Time plots of Accelerations during hovering with payload dropp (LPF cutoff 160Hz');
+sgtitle('Time plots of Accelerations during hovering with payload dropp (LPF cutoff 160Hz)');
 
 %% FFT Analysis for Hover (LPF 20Hz)
 

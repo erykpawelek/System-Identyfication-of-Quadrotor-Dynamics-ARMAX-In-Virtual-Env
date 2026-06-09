@@ -71,7 +71,7 @@ connection.mav.command_long_send(
 )
 print(f"Takeoff command sent. Ascending to {args.alt} meters.")
 
-# Wait for 4 seconds safely to reach altitude
+# Wait for a while to reach altitude
 safe_delay(args.stab_dur, connection)
 
 print("Phase: Noise excitation with payload")
